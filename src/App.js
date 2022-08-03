@@ -4,20 +4,30 @@ import {ReactComponent as DeleteIcon} from './assets/DeleteIcon.svg'
 import {ReactComponent as EditIcon} from './assets/EditIcon.svg'
 import {ReactComponent as SaveIcon} from './assets/SaveIcon.svg'
 import { v4 as uuidv4 } from 'uuid';
+import { isEditable } from '@testing-library/user-event/dist/utils';
 
 
 
 function App() {
   const [todoList, setTodoList] = useState([])
   const [todo, setTodo] = useState('')
+  const [newTodo, setNewTodo] = useState('')
+
   const addTodo = () => {
     console.log(todo)
-    setTodoList(prevTodoList => [...prevTodoList, {id:uuidv4(), todo: todo, isEditable:false, isCompleted:false}])
-    setTodo('')
+    setTodoList(prevTodoList => [...prevTodoList, {id:uuidv4(), todo: newTodo, isEditable:false, isCompleted:false}])
+    setNewTodo('')
   }
 
     const completeTodo=(id)=>{
       setTodoList(prevTodoList => prevTodoList.map(todoItem=>todoItem.id === id ? {...todoItem,isCompleted : !todoItem.isCompleted} :todoItem))
+    }
+
+    const editTodo =(id,oldTodo)=>{
+      
+      
+      setTodoList(prevTodoList => prevTodoList.map(todoItem=>todoItem.id ===id ? {...todoItem,isEditable: !todoItem.isEditable}: todoItem))
+      setTodo(oldTodo)
     }
 
   return (
@@ -27,10 +37,8 @@ function App() {
         <FormControl
           className="w-75 mr-4"
           placeholder="Todo Input"
-          value={todo}
-          onChange={(e) => setTodo(e.target.value)}
-
-
+          value={newTodo}
+          onChange={(e) => setNewTodo(e.target.value)}
         />
         <Button className="ms-5" onClick={() => addTodo()}>Add Todo</Button>
       </div>
@@ -40,22 +48,37 @@ function App() {
           todoList.map(
             (todoItem)=>
               <div key={todoItem.id}className="d-flex justify-content-between">
-                <div className='d-flex'>
+                <div className='d-flex w-75'>
                   <Form.Check
                   type='checkbox'
                   className='me-2'
                   value={todoItem.isCompleted}
                   onChange={()=>completeTodo(todoItem.id)}
                   />
-                  <label className={`${todoItem.isCompleted ? 'text-decoration-line-through':'' } fw-bold`}>
-                    {todoItem.todo}
-                  </label>
+                  {
+                    !todoItem.isEditable ?
+                    <label className={`${todoItem.isCompleted ? 'text-decoration-line-through':'' } fw-bold`}>
+                      {todoItem.todo}
+                    </label>
+                  :
+                        
+                  <FormControl
+                  value={todo}
+                  onChange={(e) => setTodo(e.target.value)}
+                />
+                  }
+                
                 </div>
                 <div>
                 
-                  <EditIcon width={25} height={25} style={{cursor: 'pointer'}} className="me-2" />
-                  <DeleteIcon width={25} height={25} style={{cursor: 'pointer' }} className="me-2" />
+                  {
+                    !todoItem.isEditable ?
+                    <EditIcon width={25} height={25} style={{cursor: 'pointer'}} className="me-2" onClick={()=> editTodo(todoItem.id, todoItem.todo)}/>
+                  :
                   <SaveIcon width={25} height={25}  style={{cursor: 'pointer'}}/>
+                  }
+                  <DeleteIcon width={25} height={25} style={{cursor: 'pointer' }} className="me-2" />
+
                   
                 </div>
               </div>
