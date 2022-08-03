@@ -1,9 +1,9 @@
-
 import { useEffect, useState } from 'react';
 import { FormControl, Button, Form, FormCheck } from 'react-bootstrap';
 import {ReactComponent as DeleteIcon} from './assets/DeleteIcon.svg'
 import {ReactComponent as EditIcon} from './assets/EditIcon.svg'
 import {ReactComponent as SaveIcon} from './assets/SaveIcon.svg'
+import { v4 as uuidv4 } from 'uuid';
 
 
 
@@ -12,9 +12,13 @@ function App() {
   const [todo, setTodo] = useState('')
   const addTodo = () => {
     console.log(todo)
-    setTodoList(prevTodoList => [...prevTodoList, todo])
+    setTodoList(prevTodoList => [...prevTodoList, {id:uuidv4(), todo: todo, isEditable:false, isCompleted:false}])
     setTodo('')
   }
+
+    const completeTodo=(id)=>{
+      setTodoList(prevTodoList => prevTodoList.map(todoItem=>todoItem.id === id ? {...todoItem,isCompleted : !todoItem.isCompleted} :todoItem))
+    }
 
   return (
     <div className="d-flex flex-column justify-content-center align-items-center mt-5">
@@ -34,15 +38,17 @@ function App() {
       <div className='mt-5 w-75'>
         {
           todoList.map(
-            (todoItem,index)=>
-              <div key={index}className="d-flex justify-content-between">
+            (todoItem)=>
+              <div key={todoItem.id}className="d-flex justify-content-between">
                 <div className='d-flex'>
                   <Form.Check
                   type='checkbox'
-                  className='me-2 d-flex'
+                  className='me-2'
+                  value={todoItem.isCompleted}
+                  onChange={()=>completeTodo(todoItem.id)}
                   />
-                  <label>
-                    {todoItem}
+                  <label className={`${todoItem.isCompleted ? 'text-decoration-line-through':'' } fw-bold`}>
+                    {todoItem.todo}
                   </label>
                 </div>
                 <div>
