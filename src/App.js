@@ -30,6 +30,14 @@ function App() {
       setTodo(oldTodo)
     }
 
+  const saveTodo =(id)=>{
+    setTodoList(prevTodoList=>prevTodoList.map(todoItem=>todoItem.id ===id ? {...todoItem, isEditable: !todoItem.isEditable, todo: todo}: todoItem))
+  }
+
+  const deleteTodo =(id)=>{
+    setTodoList(prevTodoList=>prevTodoList.filter(todoItem=> todoItem.id != id))
+  }
+
   return (
     <div className="d-flex flex-column justify-content-center align-items-center mt-5">
       <h1 className="mt-5">Todo List</h1>
@@ -47,7 +55,7 @@ function App() {
         {
           todoList.map(
             (todoItem)=>
-              <div key={todoItem.id}className="d-flex justify-content-between">
+              <div key={todoItem.id}className="d-flex justify-content-between mt-3">
                 <div className='d-flex w-75'>
                   <Form.Check
                   type='checkbox'
@@ -75,9 +83,9 @@ function App() {
                     !todoItem.isEditable ?
                     <EditIcon width={25} height={25} style={{cursor: 'pointer'}} className="me-2" onClick={()=> editTodo(todoItem.id, todoItem.todo)}/>
                   :
-                  <SaveIcon width={25} height={25}  style={{cursor: 'pointer'}}/>
+                  <SaveIcon width={25} height={25}  style={{cursor: 'pointer'}}className="me-2" onClick={()=>saveTodo(todoItem.id)}/>
                   }
-                  <DeleteIcon width={25} height={25} style={{cursor: 'pointer' }} className="me-2" />
+                  <DeleteIcon width={25} height={25} style={{cursor: 'pointer' }} onClick={()=>deleteTodo(todoItem.id)} />
 
                   
                 </div>
