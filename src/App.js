@@ -1,6 +1,10 @@
 
 import { useEffect, useState } from 'react';
 import { FormControl, Button, Form, FormCheck } from 'react-bootstrap';
+import {ReactComponent as DeleteIcon} from './assets/DeleteIcon.svg'
+import {ReactComponent as EditIcon} from './assets/EditIcon.svg'
+import {ReactComponent as SaveIcon} from './assets/SaveIcon.svg'
+
 
 
 function App() {
@@ -42,7 +46,11 @@ function App() {
                   </label>
                 </div>
                 <div>
-                  Butonlar
+                
+                  <EditIcon width={25} height={25} style={{cursor: 'pointer'}} className="me-2" />
+                  <DeleteIcon width={25} height={25} style={{cursor: 'pointer' }} className="me-2" />
+                  <SaveIcon width={25} height={25}  style={{cursor: 'pointer'}}/>
+                  
                 </div>
               </div>
           )
